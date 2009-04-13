@@ -3,6 +3,11 @@
     <title>Wtf demo</title>
     <script src="../lib/prototype-1.6.0.3.js"></script>
     <script src="../src/history.js"></script>
+    <script>
+      Event.observe(document, 'dom:loaded', function() {
+        hist = new Prototype.History(function(e) { $('status').update(e) });
+      })
+    </script>
   </head>
   <body>
     <a href="#1">1</a>
@@ -10,5 +15,6 @@
     <a href="#3">3</a>
     <a href="#4">4</a>
     <a href="#5">5</a>
+    <div id="status"></div>
   </body>
 </html>

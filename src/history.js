@@ -1,14 +1,25 @@
 /*
- * jQuery history plugin
+ * Prototype history
  *
- * Copyright (c) 2006 Taku Sano (Mikage Sawatari)
+ * -----------------
+ *
+ * Based on jQuery history plugin
+ * Copyright (c) 2006 Taku Sano (Mikage Sawatari), modified by Lincoln Cooper
+ *
  * Licensed under the MIT License:
  *   http://www.opensource.org/licenses/mit-license.php
- *
- * Modified by Lincoln Cooper to add Safari support and only call the callback once during initialization
- * for msie when no initial hash supplied.
  */
 
+Object.extend(Prototype.Browser, {
+  version: (function() {
+    if ( Prototype.Browser.WebKit ) {
+      var version = navigator.appVersion.match(/Version\/([\d.]{3}) /)[1];
+      return parseFloat(version)
+    }
+
+    return 10
+  })()
+});
 
 Prototype.History = Class.create({
 	initialize: function(callback){
@@ -30,7 +41,7 @@ Prototype.History = Class.create({
 			iframe.close();
 			iframe.location.hash = current_hash;
 		}
-		else if (Prototype.Browser.WebKit) {
+		else if (Prototype.Browser.WebKit && ( Prototype.Browser.version < 4 )) {
 			// etablish back/forward stacks
 			this.historyBackStack = [];
 			this.historyBackStack.length = history.length;
@@ -63,7 +74,7 @@ Prototype.History = Class.create({
 				this.historyCallback(current_hash.replace(/^#/, ''));
 				
 			}
-		} else if (Prototype.Browser.WebKit) {
+		} else if (Prototype.Browser.WebKit && ( Prototype.Browser.version < 4 )) {
 			if (!this.dontCheck) {
 				var historyDelta = history.length - this.historyBackStack.length;
 				
@@ -105,7 +116,7 @@ Prototype.History = Class.create({
 	historyLoad: function(hash){
 		var newhash;
 		
-		if (Prototype.Browser.WebKit) {
+		if (Prototype.Browser.WebKit && ( Prototype.Browser.version < 4 )) {
 			newhash = hash;
 		}
 		else {
@@ -122,7 +133,7 @@ Prototype.History = Class.create({
 			iframe.location.hash = newhash;
 			this.historyCallback(hash);
 		}
-		else if (Prototype.Browser.WebKit) {
+		else if (Prototype.Browser.WebKit && ( Prototype.Browser.version < 4 )) {
 			this.dontCheck = true;
 			// Manually keep track of the history values for Safari
 			this.historyAddHistory(hash);
