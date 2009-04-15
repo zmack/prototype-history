@@ -17,7 +17,7 @@ Object.extend(Prototype.Browser, {
 
   version: (function() {
     if ( Prototype.Browser.WebKit ) {
-      var version = navigator.appVersion.match(/Version\/([\d.]{3}) /)[1];
+      var version = navigator.appVersion.match(/Version\/([\d.]+) /)[1];
       return parseFloat(version)
     }
 
@@ -78,7 +78,7 @@ Prototype.History = Class.create({
         this.historyCallback(current_hash.replace(/^#/, ''));
         
       }
-    } else if (Prototype.Browser.WebKit && ( Prototype.Browser.version < 4 )) {
+    } else if (Prototype.Browser.Safari && ( Prototype.Browser.version < 4 )) {
       if (!this.dontCheck) {
         var historyDelta = history.length - this.historyBackStack.length;
         
@@ -99,8 +99,8 @@ Prototype.History = Class.create({
         } else if (this.historyBackStack[this.historyBackStack.length - 1] == undefined && !this.isFirst) {
           // back button has been pushed to beginning and URL already pointed to hash (e.g. a bookmark)
           // document.URL doesn't change in Safari
-          if (document.URL.indexOf('#') >= 0) {
-            this.historyCallback(document.URL.split('#')[1]);
+          if (document.location.hash.indexOf('#') >= 0) {
+            this.historyCallback(document.location.hash.split('#')[1]);
           } else {
             var current_hash = location.hash;
             this.historyCallback('');
